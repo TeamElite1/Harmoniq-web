@@ -2,7 +2,7 @@ import React from 'react'
 
 const HOme = () => {
   return (
-    <div>HOme</div>
+    <div> this is the home page of harmoniq application and this is a test file.</div>
   )
 }
 
