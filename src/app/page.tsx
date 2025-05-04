@@ -1,9 +1,9 @@
 import React from 'react'
 
-const HOme = () => {
+const Home = () => {
   return (
-    <div>HOme</div>
+    <div> this is the home page of harmoniq application</div>
   )
 }
 
-export default HOme
+export default Home
