@@ -1,9 +1,8 @@
-import React from 'react'
 
-const HOme = () => {
+export default function HomePage() {
   return (
-    <div> this is the home page of harmoniq application and this is a test file.</div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+      <h1 className="text-2xl font-bold">Home Page</h1>
+      </div>
   )
 }
-
-export default HOme
