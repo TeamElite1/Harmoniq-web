@@ -69,7 +69,7 @@ If you have an idea for a new feature, please open an issue on [GitHub Issues](h
    ```
 
    ##### Commit Message Rules
-
+ 
    Commit messages also follow a similar pattern. However, there is no need to add ticket number since they can be easily tracked given the branch name. Instead, use a colon, `:`, after the type of change (`feat`, `fix`, etc.), a whitespace, then your commit message. In cases where you are required to add the ticket number, you may use a the parenthesis after the type of change, like `feat(HARMONIQ-1234): your commit message`
 
    > Another example: `refactor: use a single state for formData` or `refactor(HARMONIQ-1234): use a single state for formData`
