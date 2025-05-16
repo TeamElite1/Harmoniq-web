@@ -1,3 +1,8 @@
+import { cookies } from "next/headers"
+
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar"
+
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
@@ -17,17 +22,27 @@ export const metadata: Metadata = {
     description: "A balance and profuctivity platform",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+
+  const cookieStore = await cookies()
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true"
+
     return (
         <html lang="en">
             <body
                 className={`${geistSans.variable} ${geistMono.variable} antialiased`}
             >
-                {children}
+                <SidebarProvider defaultOpen={defaultOpen} >
+                    <AppSidebar />
+                    <main>
+                        <SidebarTrigger />
+                        {children}
+                    </main>
+                </SidebarProvider>
             </body>
         </html>
     );
