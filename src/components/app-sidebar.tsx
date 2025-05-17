@@ -1,6 +1,6 @@
 import { Calendar, ChevronUp, Home, Inbox, Search, Settings, User2 } from "lucide-react"
 
-import {
+import { 
   Sidebar,
   SidebarContent,
   SidebarFooter,
