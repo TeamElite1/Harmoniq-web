@@ -238,7 +238,7 @@ const MentalHealthCard: React.FC<MentalHealthProps> = ({ moodOptions }) => {
           How are you feeling today?
         </CardDescription>
         <CardContent>
-          <div className="space-y-4">
+          <div className="space-y-5">
             <div className="grid grid-cols gap-2">
               {moodOptions.map((mood) => (
                 <button
