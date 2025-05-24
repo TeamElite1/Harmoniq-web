@@ -1,5 +1,6 @@
+'use client'
 // importing shadcn component needed for the dashboard
-import React from 'react';
+import React, {useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button"
@@ -149,18 +150,228 @@ const TaskProgressCard: React.FC<TaskProgressProps> = ({
         </CardDescription>
       </CardHeader>
       <CardContent>
-
+        <div className="space-y-4">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+              {Math.round(progressPercentage)}%
+            </div>
+            <p className="text-sm text-gray-500">
+              {completedTasks} of {totalTasks} tasks completed
+            </p>
+          </div>
+          <Progress
+            value={progressPercentage}
+            className="h-full"
+            aria-label={`Task completion progress: ${Math.round(progressPercentage)}%`}
+          />
+          <div className="text-xs text-gray-500 text-center">
+            {totalTasks - completedTasks} tasks remaining
+          </div>
+        </div>
       </CardContent>
     </Card>
-  )
+  );
+};
+
+//Motivational Quote Component
+interface MotivationalQuoteProps{
+  quotes: string[];
 }
 
-const Dashboard = () => {
+const MotivationalQuoteCard: React.FC<MotivationalQuoteProps> = ({ quotes }) => {
+  const [currentQuote, setCurrentQuote] = useState(quotes[0]);
+
+  const refreshQuote = () => {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    setCurrentQuote(quotes[randomIndex]);
+  };
+
   return (
-    <div>
-      this is the Dashboard page
-    </div>
-  )
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Heart className="h-5 w-5" />
+            Daily Motivation
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <Alert>
+          <AlertDescription className="text-lg italic mb-4">
+            `{currentQuote}`
+          </AlertDescription>
+        </Alert>
+        <Button
+          onClick={refreshQuote}
+          variant="outline"
+          size="sm"
+          className="w-full"
+          aria-label="Get new Motivational quote"
+        >
+          <RefreshCw className="h-4 w-4 mr-2" />
+          New Quote
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+//Mental Health Check-in Component
+interface MentalHealthProps {
+  moodOptions: Array<{
+    emoji: string;
+    label: string;
+    value: number;
+  }>;
 }
 
-export default Dashboard
+const MentalHealthCard: React.FC<MentalHealthProps> = ({ moodOptions }) => {
+  const [selectedMood, setSelectedMood] = useState<number | null>(null);
+  
+  return (
+    <Card className="h-full">
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2">
+          <Smile className="h-5 w-5" />
+          Mental Health Check-in
+        </CardTitle>
+        <CardDescription>
+          How are you feeling today?
+        </CardDescription>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols gap-2">
+              {moodOptions.map((mood) => (
+                <button
+                  key={mood.value}
+                  onClick={() => setSelectedMood(mood.value)}
+                  className={`p-3 rounded-lg border-2 transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 ${selectedMood === mood.value
+                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950'
+                    : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+                    }`}
+                  aria-label={`Select mood: ${mood.label}`}
+                >
+                  <div className="text-2xl mb-1">{mood.emoji}</div>
+                  <div className="text-xs font-medium">{mood.label}</div>
+                </button>
+              ))}
+            </div>
+            {selectedMood && (
+              <Alert>
+                <AlertDescription>
+                  Thanks for checking in! Remember to take care of yourself today.
+                </AlertDescription>
+              </Alert>
+            )}
+          </div>
+        </CardContent>
+      </CardHeader>
+    </Card>
+  );
+};
+
+//Theme Toggle Component
+const ThemeToggle: React.FC<{ isDark: boolean; onToggle: () => void }> = ({
+  isDark,
+  onToggle
+}) => {
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      onClick={onToggle}
+      aria-label={`Switch to ${isDark ? 'light' : 'dark'} mode`}
+    >
+      {isDark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+    </Button>
+  );
+};
+
+//Main Dashboard Component
+const HarmoniqDashboard: React.FC = () => {
+  const [schedule, setSchedule] = useState(mockSchedule);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  //Toggle task completion
+  const handleToggleTask = (taskId: number) => {
+    setSchedule(prev =>
+      prev.map(task =>
+        task.id === taskId
+          ? { ...task, completed: !task.completed }
+          : task
+      )
+    );
+  };
+
+  //Calculate completed tasks
+  const completedTasks = schedule.filter(task => task.completed).length;
+
+  //Theme toggle handler
+  const toggleTheme = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
+  //Apply theme to document
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [isDarkMode])
+
+  return (
+    <div className={`min-h-screen transition-colors ${isDarkMode
+      ? 'dark bg-gray-900 text-white'
+      : 'bg-gray-50 text-gray-900'
+      }`}>
+      {/* Header */}
+      <header className="border-b bg-white dark:bg-gray-800 px-6 py-4">
+        <div className="flex items-center justify-between max-w-7xl mx-auto">
+          <div>
+            <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              HARMONIQ
+            </h1>
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Your personal wellness Dashboard
+            </p>
+          </div>
+          <ThemeToggle isDark={isDarkMode} onToggle={toggleTheme} />
+        </div>
+      </header>
+
+      {/* Main content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+          {/* Daily Schedule - Takes full width on Mobile, half on large screens */}
+          <div className="lg:col-span-1 xl:col-span-1">
+            <ScheduleCard
+              scheduleData={schedule}
+              onToggleTask={handleToggleTask}
+            />
+          </div>
+
+          {/* Task Progress */}
+          <div className="lg:col-span-1 xl:col-span-1">
+            <TaskProgressCard
+              completedTasks={completedTasks}
+              totalTasks={schedule.length}
+            />
+
+          </div>
+
+          {/* Motivational Quote */}
+          <div className="lg:col-span-1 xl:col-span-1">
+            <MotivationalQuoteCard quotes={motivationalQuotes} />
+          </div>
+
+          {/* Mental Health Check-in - Spans 2 columns on large screens */}
+          <div className="lg:col-span-2 xl:col-span-3">
+            <MentalHealthCard moodOptions={moodOptions} />
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default HarmoniqDashboard;
